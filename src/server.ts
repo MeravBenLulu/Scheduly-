@@ -1,23 +1,21 @@
 require('dotenv').config();
 import express from 'express';
 import businessRoutes from './routes/businessRoutes';
+import bodyParser from 'body-parser';
+import errorHandler from './middlewares/errorHandler';
 
-//import mongoose from 'mongoose';
 const app = express();
 const PORT = process.env.PORT || 5000;
-
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-// הגדרת מסלולים (Routes)
+
 app.use('/api/business', businessRoutes);
 // app.use('/api/services', require('./routes/servicesRoutes'));
 // app.use('/api/meetings', require('./routes/meetingRoutes'));
 // app.use('/api/users', require('./routes/userRoutes'));
 
-// // חיבור למסד נתונים
-// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-//   .then(() => console.log('Connected to MongoDB'))
-//   .catch(err => console.error('Could not connect to MongoDB', err));
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
