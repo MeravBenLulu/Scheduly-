@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-interface IBusiness extends Document {
+export interface IBusiness extends Document {
     name: string;
     description: string;
     email: string;

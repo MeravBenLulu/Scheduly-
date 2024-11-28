@@ -4,11 +4,11 @@ import businessApiFunctions from '../controllers/businessController';  // ייב
 const app :Router=express.Router();
 
 async function routers():Promise<void>{
-    app.get('/business/:email',businessApiFunctions.getByEmail);
-    app.get('/business',businessApiFunctions.get );
-    app.post('/business',businessApiFunctions.post);
-    app.put('/business/:email',businessApiFunctions.put);
-    app.delete('/business/:email',businessApiFunctions.delete);
+    app.get('/:email',businessApiFunctions.getByEmail);
+    app.get('/',businessApiFunctions.get );
+    app.post('/',businessApiFunctions.post);
+    app.put('/:email',businessApiFunctions.put);
+    app.delete('/:email',businessApiFunctions.delete);
 }
 routers();
 
