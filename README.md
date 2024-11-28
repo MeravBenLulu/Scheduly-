@@ -1,4 +1,5 @@
 # Scheduly-
+
 Scheduly הוא פרויקט מערכת ניהול פגישות לעסקים קטנים. המערכת מספקת פתרון נוח ויעיל למנהלים לקביעת פגישות, ניהול שירותים, וניהול לקוחות.
 
 התקנה:
@@ -12,5 +13,3 @@ npm install express mongoose dotenv jsonwebtoken log4js bcryptjs
 
 אולי יהיה שימוש גם ב
 npm install swagger-ui-express cors
-
-

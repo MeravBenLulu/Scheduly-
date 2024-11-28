@@ -128,3 +128,18 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Husky pre-commit hook
+.husky/pre-commit
+
+# Prettier config
+.prettierrc
+
+# ESLint config
+eslint.config.ts
+
+# MongoDB keys
+mongodb.asc
+
+# Typescript files not needing to be tracked (cache, compiled files)
+tsconfig.json

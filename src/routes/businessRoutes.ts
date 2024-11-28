@@ -1,14 +1,14 @@
-import express,{ Router } from "express"; 
-import businessApiFunctions from '../controllers/businessController';  // ייבוא הקונטרולר
+import express, { Router } from "express";
+import businessApiFunctions from "../controllers/businessController"; // ייבוא הקונטרולר
 
-const app :Router=express.Router();
+const app: Router = express.Router();
 
-async function routers():Promise<void>{
-    app.get('/:email',businessApiFunctions.getByEmail);
-    app.get('/',businessApiFunctions.get );
-    app.post('/',businessApiFunctions.post);
-    app.put('/:email',businessApiFunctions.put);
-    app.delete('/:email',businessApiFunctions.delete);
+async function routers(): Promise<void> {
+  app.get("/:email", businessApiFunctions.getByEmail);
+  app.get("/", businessApiFunctions.get);
+  app.post("/", businessApiFunctions.post);
+  app.put("/:email", businessApiFunctions.put);
+  app.delete("/:email", businessApiFunctions.delete);
 }
 routers();
 
