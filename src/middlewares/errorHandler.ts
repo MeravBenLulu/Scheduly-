@@ -1,14 +1,23 @@
-const express = require("express");
-let app = express.Router();
-import { Request, Response, NextFunction } from "express";
-import AppError from "../classes/AppError";
+import { Request, Response, NextFunction } from 'express';
+import logger from '../utils/logger';
 
-app.use((err: AppError, _req: Request, res: Response, _next: NextFunction) => {
-  //TODO: write error to log
-  return res.status(err.statusCode).json({
+const errorHandler = (
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  logger.error('Error occurred:', {
+    message: err.message || 'No message',
+    stack: err.stack || 'No stack',
+    statusCode: err.statusCode || 500,
+    timestamp: new Date().toISOString(),
+  });
+  res.status(err.statusCode || 500).json({
     error: {
-      message: err.message,
+      message: err.message || 'Internal Server Error',
     },
   });
-});
-export default app;
+};
+
+export default errorHandler;

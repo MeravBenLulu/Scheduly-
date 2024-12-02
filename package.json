@@ -28,8 +28,7 @@
     "prepare": "husky install",
     "prettier": "prettier --write ."
   },
-"lint-staged": {
-  "*.ts": "prettier --write"
-}
-
+  "lint-staged": {
+    "*.ts": "prettier --write"
+  }
 }
