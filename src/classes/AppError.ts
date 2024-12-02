@@ -1,5 +1,5 @@
 export const ErrorConstants = {
-  INVALID_CREDENTIALS: { message: 'Invalid credentials', statusCode: 401 },
+  INVALID_CREDENTIALS: { message: 'Invalid credentials', statusCode: 404 },
   MISSING_REQUIRED_FIELDS: {
     message: 'Some required fields are missing',
     statusCode: 400,
