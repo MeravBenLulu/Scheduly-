@@ -11,10 +11,13 @@ class BusinessRepository {
     }
   }
 
-  async findByEmail(email: string): Promise<IBusiness | null> {
+  async findById(id: string): Promise<IBusiness | null> {
     try {
-      return await Business.findOne({ email }).lean<IBusiness>();
+      return await Business.findById(id).lean<IBusiness>();
     } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        throw new AppError(ErrorConstants.VLIDATION_ERROR);
+      }
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
   }
@@ -27,17 +30,20 @@ class BusinessRepository {
       if (error instanceof mongoose.Error.ValidationError) {
         throw new AppError(ErrorConstants.VLIDATION_ERROR);
       }
+      if (error.code === 11000) {
+        throw new AppError(ErrorConstants.DATA_ALREADY_EXISTS);
+      }
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
   }
 
-  async updateByEmail(
-    email: string,
+  async updateById(
+    id: string,
     updates: Partial<IBusiness>
   ): Promise<IBusiness | null> {
     try {
-      return await Business.findOneAndUpdate(
-        { email },
+      return await Business.findByIdAndUpdate(
+        id,
         { $set: updates },
         { new: true }
       ).lean<IBusiness>();
@@ -45,14 +51,20 @@ class BusinessRepository {
       if (error instanceof mongoose.Error.ValidationError) {
         throw new AppError(ErrorConstants.VLIDATION_ERROR);
       }
+      if (error.code === 11000) {
+        throw new AppError(ErrorConstants.DATA_ALREADY_EXISTS);
+      }
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
   }
 
-  async deleteByEmail(email: string): Promise<IBusiness | null> {
+  async deleteById(id: string): Promise<IBusiness | null> {
     try {
-      return await Business.findOneAndDelete({ email });
+      return await Business.findByIdAndDelete(id);
     } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        throw new AppError(ErrorConstants.VLIDATION_ERROR);
+      }
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
   }

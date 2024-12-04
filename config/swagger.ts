@@ -19,6 +19,43 @@ const options = {
         Business: {
           type: 'object',
           properties: {
+            id: {
+              type: 'string',
+              description: 'Unique identifier for the business',
+            },
+            name: {
+              type: 'string',
+              description: 'The name of the business',
+            },
+            description: {
+              type: 'string',
+              description: 'A description of the business',
+            },
+            email: {
+              type: 'string',
+              description: 'The email of the business',
+            },
+            telephone: {
+              type: 'string',
+              description: 'The telephone number of the business',
+            },
+            address: {
+              type: 'string',
+              description: 'The address of the business',
+            },
+            managerId: {
+              type: 'string',
+              description: 'Unique identifier for the business manager',
+            },
+          },
+        },
+        BusinessResponseDTO: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'Unique identifier for the business',
+            },
             name: {
               type: 'string',
               description: 'The name of the business',

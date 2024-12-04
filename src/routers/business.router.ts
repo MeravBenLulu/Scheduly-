@@ -2,11 +2,11 @@ import express, { Router } from 'express';
 import businessApiFunctions from '../controllers/business.controller';
 
 const app: Router = express.Router();
-
-app.get('/:email', businessApiFunctions.getByEmail);
+app.use(express.json());
+app.get('/:id', businessApiFunctions.getById);
 app.get('/', businessApiFunctions.get);
 app.post('/', businessApiFunctions.post);
-app.put('/:email', businessApiFunctions.put);
-app.delete('/:email', businessApiFunctions.delete);
+app.put('/:id', businessApiFunctions.put);
+app.delete('/:id', businessApiFunctions.delete);
 
 export default app;

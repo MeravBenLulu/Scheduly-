@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import BusinessService from '../services/business.service';
+import { IBusiness } from '../models/business.model';
+import { BusinessResponseDTO } from '../classes/dtos/business.dto';
 
 class BusinessController {
   /**
@@ -16,13 +18,14 @@ class BusinessController {
    *             schema:
    *               type: array
    *               items:
-   *                 $ref: '#/components/schemas/Business'
+   *                 $ref: '#/components/schemas/BusinessResponseDTO'
    *       500:
    *         description: Internal server error
    */
   async get(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const businesses = await BusinessService.getAllBusinesses();
+      const businesses: BusinessResponseDTO[] =
+        await BusinessService.getAllBusinesses();
       res.status(200).json(businesses);
     } catch (error) {
       next(error);
@@ -30,15 +33,15 @@ class BusinessController {
   }
   /**
    * @swagger
-   * /business/{email}:
+   * /business/{id}:
    *   get:
-   *     summary: Get business by email
-   *     description: Retrieve a specific business by its email.
+   *     summary: Get business by id
+   *     description: Retrieve a specific business by its id.
    *     parameters:
    *       - in: path
-   *         name: email
+   *         name: id
    *         required: true
-   *         description: The email of the business.
+   *         description: The id of the business.
    *         schema:
    *           type: string
    *     responses:
@@ -47,7 +50,7 @@ class BusinessController {
    *         content:
    *           application/json:
    *             schema:
-   *               $ref: '#/components/schemas/Business'
+   *               $ref: '#/components/schemas/BusinessResponseDTO'
    *       400:
    *         description: Some required fields are missing
    *       404:
@@ -55,15 +58,14 @@ class BusinessController {
    *       500:
    *         description: Internal server error
    */
-  async getByEmail(
+  async getById(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const business = await BusinessService.getBusinessByEmail(
-        req.params.email
-      );
+      const business: BusinessResponseDTO =
+        await BusinessService.getBusinessById(req.params.id);
       res.status(200).json(business);
     } catch (error) {
       next(error);
@@ -86,6 +88,7 @@ class BusinessController {
    *               - description
    *               - email
    *               - address
+   *               - managerId
    *             properties:
    *               name:
    *                 type: string
@@ -102,6 +105,9 @@ class BusinessController {
    *               address:
    *                 type: string
    *                 description: The address of the business
+   *               managerId:
+   *                type: string
+   *                description: The business manager unique identifier
    *     responses:
    *       201:
    *         description: Business created successfully
@@ -120,7 +126,9 @@ class BusinessController {
    */
   async post(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const newBusiness = await BusinessService.createBusiness(req.body);
+      const newBusiness: IBusiness = await BusinessService.createBusiness(
+        req.body
+      );
       res.status(201).json({ success: true, data: newBusiness });
     } catch (error) {
       next(error);
@@ -128,15 +136,15 @@ class BusinessController {
   }
   /**
    * @swagger
-   * /business/{email}:
+   * /business/{id}:
    *   put:
-   *     summary: Update business by email
-   *     description: Update an existing business by its email.
+   *     summary: Update business by id
+   *     description: Update an existing business by its id.
    *     parameters:
    *       - in: path
-   *         name: email
+   *         name: id
    *         required: true
-   *         description: The email of the business.
+   *         description: The id of the business.
    *         schema:
    *           type: string
    *     requestBody:
@@ -152,12 +160,18 @@ class BusinessController {
    *               description:
    *                 type: string
    *                 description: The updated description of the business
+   *               email:
+   *                 type: string
+   *                 description: The email of the business
    *               telephone:
    *                 type: string
    *                 description: The updated telephone of the business
    *               address:
    *                 type: string
    *                 description: The updated address of the business
+   *               managerId:
+   *                type: string
+   *                description: The business manager unique identifier
    *     responses:
    *       200:
    *         description: Business updated successfully
@@ -169,6 +183,8 @@ class BusinessController {
    *         description: Some required fields are missing
    *       422:
    *         description: validation faild
+   *       409:
+   *         description: Data already exists
    *       404:
    *         description: not found
    *       500:
@@ -176,8 +192,8 @@ class BusinessController {
    */
   async put(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const updatedBusiness = await BusinessService.updateBusiness(
-        req.params.email,
+      const updatedBusiness: IBusiness = await BusinessService.updateBusiness(
+        req.params.id,
         req.body
       );
       res.status(200).json({ success: true, data: updatedBusiness });
@@ -187,19 +203,19 @@ class BusinessController {
   }
   /**
    * @swagger
-   * /business/{email}:
+   * /business/{id}:
    *   delete:
-   *     summary: Delete a business by email
-   *     description: Delete an existing business by its email.
+   *     summary: Delete a business by id
+   *     description: Delete an existing business by its id.
    *     parameters:
    *       - in: path
-   *         name: email
+   *         name: id
    *         required: true
-   *         description: The email of the business to delete.
+   *         description: The id of the business to delete.
    *         schema:
    *           type: string
    *     responses:
-   *       200:
+   *       204:
    *         description: Business deleted successfully
    *       400:
    *         description: Some required fields are missing
@@ -210,7 +226,7 @@ class BusinessController {
    */
   async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      await BusinessService.deleteBusiness(req.params.email);
+      await BusinessService.deleteBusiness(req.params.id);
       res.status(204).send();
     } catch (error) {
       next(error);
