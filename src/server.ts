@@ -1,11 +1,11 @@
 require('dotenv').config();
 import express, { Application } from 'express';
-import businessRoutes from './routes/businessRoutes';
+import businessRoutes from './routers/business.router';
 import bodyParser from 'body-parser';
 import connectToDB from './utils/connectToDB';
 import errorHandler from './middlewares/errorHandler';
 import logMiddleware from './middlewares/logWriter';
-import { swaggerUi, specs } from './swagger';
+import { swaggerUi, specs } from '../config/swagger';
 
 connectToDB();
 const app: Application = express();

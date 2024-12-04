@@ -13,7 +13,7 @@ const logMiddleware = (
     timestamp: new Date().toISOString(),
   });
   res.on('finish', () => {
-    if (res.statusCode <= 200)
+    if (res.statusCode == 200)
       logger.info('Response sent', {
         statusCode: res.statusCode,
         timestamp: new Date().toISOString(),

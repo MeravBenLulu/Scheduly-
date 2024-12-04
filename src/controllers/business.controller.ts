@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import AppError, { ErrorConstants } from '../classes/AppError';
-import Business, { IBusiness } from '../models/Business';
+import BusinessService from '../services/business.service';
 
-export default {
+class BusinessController {
   /**
    * @swagger
    * /business:
@@ -21,19 +20,14 @@ export default {
    *       500:
    *         description: Internal server error
    */
-  get: async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  async get(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const businesses = await Business.find();
+      const businesses = await BusinessService.getAllBusinesses();
       res.status(200).json(businesses);
     } catch (error) {
-      next(new AppError(ErrorConstants.INTERNAL_SERVER_ERROR));
+      next(error);
     }
-  },
-
+  }
   /**
    * @swagger
    * /business/{email}:
@@ -57,29 +51,24 @@ export default {
    *       400:
    *         description: Some required fields are missing
    *       404:
-   *         description: Invalid credentials
+   *         description: not found
    *       500:
    *         description: Internal server error
    */
-  getByEmail: async (
+  async getByEmail(
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<void> => {
+  ): Promise<void> {
     try {
-      const email: string | null = req.params.email;
-      if (!email)
-        return next(new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS));
-      const business = await Business.findOne({ email });
-      if (!business) {
-        return next(new AppError(ErrorConstants.INVALID_CREDENTIALS));
-      }
+      const business = await BusinessService.getBusinessByEmail(
+        req.params.email
+      );
       res.status(200).json(business);
     } catch (error) {
-      next(new AppError(ErrorConstants.INTERNAL_SERVER_ERROR));
+      next(error);
     }
-  },
-
+  }
   /**
    * @swagger
    * /business:
@@ -124,36 +113,19 @@ export default {
    *         description: Some required fields are missing
    *       409:
    *         description: Data already exists
+   *       422:
+   *         description: validation faild
    *       500:
    *         description: Internal server error
    */
-  post: async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  async post(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { name, description, email, telephone, address }: IBusiness =
-        req.body;
-      if (!name || !description || !email || !address)
-        return next(new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS));
-      const findBusiness = await Business.findOne({ email });
-      if (findBusiness)
-        return next(new AppError(ErrorConstants.DATA_ALREADY_EXISTS));
-      const newBusiness = new Business({
-        name,
-        description,
-        email,
-        telephone,
-        address,
-      });
-      const savedBusiness = await newBusiness.save();
-      res.status(201).json({ success: true, data: savedBusiness });
+      const newBusiness = await BusinessService.createBusiness(req.body);
+      res.status(201).json({ success: true, data: newBusiness });
     } catch (error) {
-      next(new AppError(ErrorConstants.INTERNAL_SERVER_ERROR));
+      next(error);
     }
-  },
-
+  }
   /**
    * @swagger
    * /business/{email}:
@@ -195,35 +167,24 @@ export default {
    *               $ref: '#/components/schemas/Business'
    *       400:
    *         description: Some required fields are missing
+   *       422:
+   *         description: validation faild
    *       404:
-   *         description: Invalid credentials
+   *         description: not found
    *       500:
    *         description: Internal server error
    */
-  put: async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  async put(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { email } = req.params;
-      if (!email)
-        return next(new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS));
-      const findBusiness = await Business.findOne({ email });
-      if (!findBusiness)
-        return next(new AppError(ErrorConstants.INVALID_CREDENTIALS));
-      const { name, description, telephone, address }: IBusiness = req.body;
-      const savedBusiness = await Business.findOneAndUpdate(
-        { email: email },
-        { $set: { name, description, telephone, address } },
-        { new: true }
+      const updatedBusiness = await BusinessService.updateBusiness(
+        req.params.email,
+        req.body
       );
-      res.status(200).json({ success: true, data: savedBusiness });
+      res.status(200).json({ success: true, data: updatedBusiness });
     } catch (error) {
-      next(new AppError(ErrorConstants.INTERNAL_SERVER_ERROR));
+      next(error);
     }
-  },
-
+  }
   /**
    * @swagger
    * /business/{email}:
@@ -243,26 +204,17 @@ export default {
    *       400:
    *         description: Some required fields are missing
    *       404:
-   *         description: Invalid credentials
+   *         description: not found
    *       500:
    *         description: Internal server error
    */
-  delete: async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { email } = req.params;
-      if (!email)
-        return next(new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS));
-      const findBusiness = await Business.findOne({ email });
-      if (!findBusiness)
-        return next(new AppError(ErrorConstants.INVALID_CREDENTIALS));
-      const deletedBusiness = await Business.findOneAndDelete({ email });
-      res.status(200).json({ success: true, data: deletedBusiness });
+      await BusinessService.deleteBusiness(req.params.email);
+      res.status(204).send();
     } catch (error) {
-      next(new AppError(ErrorConstants.INTERNAL_SERVER_ERROR));
+      next(error);
     }
-  },
-};
+  }
+}
+export default new BusinessController();
