@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import AppError, { ErrorConstants } from '../classes/AppError';
 
 class BusinessRepository {
-  async findAll(): Promise<IBusiness[]> {
+  async find(): Promise<IBusiness[]> {
     try {
       return await Business.find().lean<IBusiness[]>();
     } catch (error) {

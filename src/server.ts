@@ -1,6 +1,7 @@
 require('dotenv').config();
 import express, { Application } from 'express';
 import businessRoutes from './routers/business.router';
+import usersRouter from './routers/users.router';
 import bodyParser from 'body-parser';
 import connectToDB from './utils/connectToDB';
 import errorHandler from './middlewares/errorHandler';
@@ -17,7 +18,7 @@ app.use(logMiddleware);
 app.use('/business', businessRoutes);
 // app.use('/api/services', require('./routes/servicesRoutes'));
 // app.use('/api/meetings', require('./routes/meetingRoutes'));
-// app.use('/api/users', require('./routes/userRoutes'));
+app.use('/', usersRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(errorHandler);
 

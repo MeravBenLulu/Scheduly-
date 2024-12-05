@@ -78,6 +78,44 @@ const options = {
             },
           },
         },
+        User: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'Unique identifier for the user',
+            },
+            name: {
+              type: 'string',
+              description: 'The name of the user',
+            },
+            password: {
+              type: 'string',
+              description: 'A password of the user',
+            },
+            email: {
+              type: 'string',
+              description: 'The email of the business',
+            },
+          },
+        },
+        UserResponseDTO: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'Unique identifier for the user',
+            },
+            name: {
+              type: 'string',
+              description: 'The name of the user',
+            },
+            email: {
+              type: 'string',
+              description: 'The email of the business',
+            },
+          },
+        },
       },
     },
   },

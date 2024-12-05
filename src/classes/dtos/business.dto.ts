@@ -1,6 +1,6 @@
 import { IBusiness } from '../../models/business.model';
 
-export interface BusinessResponseDTO {
+export interface IBusinessResponseDTO {
   id: string;
   name: string;
   description: string;
@@ -11,7 +11,7 @@ export interface BusinessResponseDTO {
 
 export const toBusinessResponse = (
   business: IBusiness
-): BusinessResponseDTO => {
+): IBusinessResponseDTO => {
   return {
     id: business._id,
     name: business.name,

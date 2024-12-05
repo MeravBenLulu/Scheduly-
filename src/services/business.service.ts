@@ -2,18 +2,18 @@ import BusinessRepository from '../repositories/business.repository';
 import { IBusiness } from '../models/business.model';
 import AppError, { ErrorConstants } from '../classes/AppError';
 import {
-  BusinessResponseDTO,
+  IBusinessResponseDTO,
   toBusinessResponse,
 } from '../classes/dtos/business.dto';
 import mongoose from 'mongoose';
 
 class BusinessService {
-  async getAllBusinesses(): Promise<BusinessResponseDTO[]> {
-    const businesses: IBusiness[] | null = await BusinessRepository.findAll();
+  async get(): Promise<IBusinessResponseDTO[]> {
+    const businesses: IBusiness[] | null = await BusinessRepository.find();
     return businesses.map(toBusinessResponse);
   }
 
-  async getBusinessById(id: string): Promise<BusinessResponseDTO> {
+  async getById(id: string): Promise<IBusinessResponseDTO> {
     if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new AppError(ErrorConstants.NOT_FOUND);
@@ -22,17 +22,14 @@ class BusinessService {
     return toBusinessResponse(business);
   }
 
-  async createBusiness(data: IBusiness): Promise<IBusiness> {
+  async create(data: IBusiness): Promise<IBusiness> {
     const { name, description, address, email, managerId } = data;
     if (!name || !description || !email || !address || !managerId)
       throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     return await BusinessRepository.create(data);
   }
 
-  async updateBusiness(
-    id: string,
-    updates: Partial<IBusiness>
-  ): Promise<IBusiness> {
+  async update(id: string, updates: Partial<IBusiness>): Promise<IBusiness> {
     if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new AppError(ErrorConstants.NOT_FOUND);
@@ -41,7 +38,7 @@ class BusinessService {
     return await BusinessRepository.updateById(id, updates);
   }
 
-  async deleteBusiness(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new AppError(ErrorConstants.NOT_FOUND);

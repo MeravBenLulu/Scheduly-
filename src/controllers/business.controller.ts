@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import BusinessService from '../services/business.service';
 import { IBusiness } from '../models/business.model';
-import { BusinessResponseDTO } from '../classes/dtos/business.dto';
+import { IBusinessResponseDTO } from '../classes/dtos/business.dto';
 
 class BusinessController {
   /**
@@ -10,6 +10,7 @@ class BusinessController {
    *   get:
    *     summary: Get all businesses
    *     description: Retrieve all businesses from the database.
+   *     tags: [Business]
    *     responses:
    *       200:
    *         description: List of all businesses
@@ -24,8 +25,7 @@ class BusinessController {
    */
   async get(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const businesses: BusinessResponseDTO[] =
-        await BusinessService.getAllBusinesses();
+      const businesses: IBusinessResponseDTO[] = await BusinessService.get();
       res.status(200).json(businesses);
     } catch (error) {
       next(error);
@@ -37,6 +37,7 @@ class BusinessController {
    *   get:
    *     summary: Get business by id
    *     description: Retrieve a specific business by its id.
+   *     tags: [Business]
    *     parameters:
    *       - in: path
    *         name: id
@@ -64,8 +65,9 @@ class BusinessController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const business: BusinessResponseDTO =
-        await BusinessService.getBusinessById(req.params.id);
+      const business: IBusinessResponseDTO = await BusinessService.getById(
+        req.params.id
+      );
       res.status(200).json(business);
     } catch (error) {
       next(error);
@@ -77,6 +79,7 @@ class BusinessController {
    *   post:
    *     summary: Create a new business
    *     description: Add a new business to the system.
+   *     tags: [Business]
    *     requestBody:
    *       required: true
    *       content:
@@ -126,9 +129,7 @@ class BusinessController {
    */
   async post(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const newBusiness: IBusiness = await BusinessService.createBusiness(
-        req.body
-      );
+      const newBusiness: IBusiness = await BusinessService.create(req.body);
       res.status(201).json({ success: true, data: newBusiness });
     } catch (error) {
       next(error);
@@ -140,6 +141,7 @@ class BusinessController {
    *   put:
    *     summary: Update business by id
    *     description: Update an existing business by its id.
+   *     tags: [Business]
    *     parameters:
    *       - in: path
    *         name: id
@@ -192,7 +194,7 @@ class BusinessController {
    */
   async put(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const updatedBusiness: IBusiness = await BusinessService.updateBusiness(
+      const updatedBusiness: IBusiness = await BusinessService.update(
         req.params.id,
         req.body
       );
@@ -207,6 +209,7 @@ class BusinessController {
    *   delete:
    *     summary: Delete a business by id
    *     description: Delete an existing business by its id.
+   *     tags: [Business]
    *     parameters:
    *       - in: path
    *         name: id
@@ -226,7 +229,7 @@ class BusinessController {
    */
   async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      await BusinessService.deleteBusiness(req.params.id);
+      await BusinessService.delete(req.params.id);
       res.status(204).send();
     } catch (error) {
       next(error);
