@@ -24,6 +24,8 @@ class BusinessService {
   }
   async getManagerIDById(id: string): Promise<string> {
     if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
+    if (!mongoose.Types.ObjectId.isValid(id))
+      throw new AppError(ErrorConstants.NOT_FOUND);
     const business: IBusiness | null = await businessRepository.findById(id);
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
     return business.managerId;
@@ -67,6 +69,7 @@ class BusinessService {
     const business = await BusinessRepository.findById(id);
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
     await BusinessRepository.deleteById(id);
+    //TODO:  add status parameter
   }
 }
 

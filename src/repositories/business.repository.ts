@@ -16,7 +16,7 @@ class BusinessRepository {
       return await Business.findById(id).lean<IBusiness>();
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
-        throw new AppError(ErrorConstants.VLIDATION_ERROR);
+        throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
@@ -28,7 +28,7 @@ class BusinessRepository {
       return await business.save();
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
-        throw new AppError(ErrorConstants.VLIDATION_ERROR);
+        throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }
       if (error.code === 11000) {
         throw new AppError(ErrorConstants.DATA_ALREADY_EXISTS);
@@ -49,7 +49,7 @@ class BusinessRepository {
       ).lean<IBusiness>();
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
-        throw new AppError(ErrorConstants.VLIDATION_ERROR);
+        throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }
       if (error.code === 11000) {
         throw new AppError(ErrorConstants.DATA_ALREADY_EXISTS);
@@ -63,7 +63,7 @@ class BusinessRepository {
       return await Business.findByIdAndDelete(id);
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
-        throw new AppError(ErrorConstants.VLIDATION_ERROR);
+        throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }

@@ -20,3 +20,23 @@ export const authorizeBusinessOwner = async (
     next(error);
   }
 };
+
+export const authorizeServicesOwner = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const id = req.params.id;
+    const userIdFromToken = res.locals.user.userId;
+    const result = await checkPermission.hasPermissionForServices(
+      userIdFromToken,
+      id,
+      req.body?.businessId || null
+    );
+    if (!result) throw new AppError(ErrorConstants.FORBIDDEN);
+    next();
+  } catch (error) {
+    next(error);
+  }
+};

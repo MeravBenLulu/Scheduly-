@@ -4,7 +4,7 @@ export const ErrorConstants = {
     message: 'Some required fields are missing',
     statusCode: 400,
   },
-  VLIDATION_ERROR: { message: 'validation failed', statusCode: 422 },
+  VALIDATION_ERROR: { message: 'validation failed', statusCode: 422 },
   NOT_FOUND: { message: 'not found', statusCode: 404 },
   DATA_ALREADY_EXISTS: { message: 'Data already exists', statusCode: 409 },
   UNAUTHORIZED: { message: 'Unauthorized access', statusCode: 401 },

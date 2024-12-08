@@ -16,7 +16,7 @@ class UserRepository {
       return await User.findOne({ name: name }).lean<IUser>();
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
-        throw new AppError(ErrorConstants.VLIDATION_ERROR);
+        throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
@@ -27,7 +27,7 @@ class UserRepository {
       return await business.save();
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
-        throw new AppError(ErrorConstants.VLIDATION_ERROR);
+        throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }
       if (error.code === 11000) {
         throw new AppError(ErrorConstants.DATA_ALREADY_EXISTS);

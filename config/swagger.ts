@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: 'http://localhost:5000',
       },
     ],
     components: {
@@ -120,6 +120,31 @@ const options = {
             email: {
               type: 'string',
               description: 'The email of the business',
+            },
+          },
+        },
+        Service: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'Unique identifier for the service',
+            },
+            name: {
+              type: 'string',
+              description: 'The name of the service',
+            },
+            description: {
+              type: 'string',
+              description: 'A description of the service',
+            },
+            timeInMinutes: {
+              type: 'number',
+              description: 'haw match time the service is taking',
+            },
+            businessId: {
+              type: 'string',
+              description: 'The id of of the business that offer this service',
             },
           },
         },
