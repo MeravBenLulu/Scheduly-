@@ -6,6 +6,7 @@ import {
   toBusinessResponse,
 } from '../classes/dtos/business.dto';
 import mongoose from 'mongoose';
+import businessRepository from '../repositories/business.repository';
 
 class BusinessService {
   async get(): Promise<IBusinessResponseDTO[]> {
@@ -21,21 +22,42 @@ class BusinessService {
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
     return toBusinessResponse(business);
   }
-
-  async create(data: IBusiness): Promise<IBusiness> {
-    const { name, description, address, email, managerId } = data;
-    if (!name || !description || !email || !address || !managerId)
-      throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
-    return await BusinessRepository.create(data);
+  async getManagerIDById(id: string): Promise<string> {
+    if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
+    const business: IBusiness | null = await businessRepository.findById(id);
+    if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
+    return business.managerId;
   }
 
-  async update(id: string, updates: Partial<IBusiness>): Promise<IBusiness> {
+  async create(
+    data: IBusinessResponseDTO,
+    managerId: string
+  ): Promise<IBusiness> {
+    const { name, description, address, email } = data;
+    if (!name || !description || !email || !address)
+      throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
+    const businesstoCreate: Partial<IBusiness> = {
+      name: data.name,
+      email: data.email,
+      description: data.description,
+      address: data.address,
+      managerId: managerId,
+      telephone: data.telephone || null,
+    };
+    return await BusinessRepository.create(businesstoCreate);
+  }
+
+  async update(
+    id: string,
+    updates: Partial<IBusinessResponseDTO>
+  ): Promise<IBusinessResponseDTO> {
     if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new AppError(ErrorConstants.NOT_FOUND);
     const business = await BusinessRepository.findById(id);
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
-    return await BusinessRepository.updateById(id, updates);
+    const res: IBusiness = await BusinessRepository.updateById(id, updates);
+    return toBusinessResponse(res);
   }
 
   async delete(id: string): Promise<void> {

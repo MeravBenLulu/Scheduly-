@@ -16,8 +16,7 @@ const businessSchema: Schema = new Schema({
   email: { type: String, required: true },
   telephone: { type: String },
   address: { type: String, required: true },
-  //managerId: { type: Schema.Types.ObjectId, ref: 'User' }},
-  managerId: { type: String, required: true },
+  managerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 const Business = mongoose.model<IBusiness>('Business', businessSchema);

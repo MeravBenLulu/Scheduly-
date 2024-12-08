@@ -80,6 +80,8 @@ class BusinessController {
    *     summary: Create a new business
    *     description: Add a new business to the system.
    *     tags: [Business]
+   *     security:
+   *       - BearerAuth: []
    *     requestBody:
    *       required: true
    *       content:
@@ -91,7 +93,6 @@ class BusinessController {
    *               - description
    *               - email
    *               - address
-   *               - managerId
    *             properties:
    *               name:
    *                 type: string
@@ -108,18 +109,17 @@ class BusinessController {
    *               address:
    *                 type: string
    *                 description: The address of the business
-   *               managerId:
-   *                type: string
-   *                description: The business manager unique identifier
    *     responses:
    *       201:
    *         description: Business created successfully
    *         content:
    *           application/json:
    *             schema:
-   *               $ref: '#/components/schemas/Business'
+   *               $ref: '#/components/schemas/BusinessResponseDTO'
    *       400:
    *         description: Some required fields are missing
+   *       401:
+   *         description: Unauthorized access
    *       409:
    *         description: Data already exists
    *       422:
@@ -129,7 +129,10 @@ class BusinessController {
    */
   async post(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const newBusiness: IBusiness = await BusinessService.create(req.body);
+      const newBusiness: IBusiness = await BusinessService.create(
+        req.body,
+        res.locals.user.userId
+      );
       res.status(201).json({ success: true, data: newBusiness });
     } catch (error) {
       next(error);
@@ -142,6 +145,8 @@ class BusinessController {
    *     summary: Update business by id
    *     description: Update an existing business by its id.
    *     tags: [Business]
+   *     security:
+   *       - BearerAuth: []
    *     parameters:
    *       - in: path
    *         name: id
@@ -183,21 +188,23 @@ class BusinessController {
    *               $ref: '#/components/schemas/Business'
    *       400:
    *         description: Some required fields are missing
-   *       422:
-   *         description: validation faild
-   *       409:
-   *         description: Data already exists
+   *       401:
+   *         description: Unauthorized access
+   *       403:
+   *         description: forbidden action
    *       404:
    *         description: not found
+   *       409:
+   *         description: Data already exists
+   *       422:
+   *         description: validation faild
    *       500:
    *         description: Internal server error
    */
   async put(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const updatedBusiness: IBusiness = await BusinessService.update(
-        req.params.id,
-        req.body
-      );
+      const updatedBusiness: IBusinessResponseDTO =
+        await BusinessService.update(req.params.id, req.body);
       res.status(200).json({ success: true, data: updatedBusiness });
     } catch (error) {
       next(error);
@@ -210,6 +217,8 @@ class BusinessController {
    *     summary: Delete a business by id
    *     description: Delete an existing business by its id.
    *     tags: [Business]
+   *     security:
+   *       - BearerAuth: []
    *     parameters:
    *       - in: path
    *         name: id
@@ -222,6 +231,10 @@ class BusinessController {
    *         description: Business deleted successfully
    *       400:
    *         description: Some required fields are missing
+   *       401:
+   *         description: Unauthorized access
+   *       403:
+   *         description: forbidden action
    *       404:
    *         description: not found
    *       500:

@@ -1,6 +1,6 @@
+import { config } from 'dotenv';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -15,6 +15,13 @@ const options = {
       },
     ],
     components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
       schemas: {
         Business: {
           type: 'object',
@@ -118,6 +125,11 @@ const options = {
         },
       },
     },
+    security: [
+      {
+        BearerAuth: [],
+      },
+    ],
   },
   apis: ['./src/controllers/*.ts'],
 };

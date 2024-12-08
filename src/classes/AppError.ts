@@ -7,10 +7,14 @@ export const ErrorConstants = {
   VLIDATION_ERROR: { message: 'validation failed', statusCode: 422 },
   NOT_FOUND: { message: 'not found', statusCode: 404 },
   DATA_ALREADY_EXISTS: { message: 'Data already exists', statusCode: 409 },
-  UNAUTHORIZED: { message: 'Unauthorized access', statusCode: 403 },
+  UNAUTHORIZED: { message: 'Unauthorized access', statusCode: 401 },
   FORBIDDEN: { message: 'Forbidden action', statusCode: 403 },
   DATABASE_ERROR: { message: 'Database error occurred', statusCode: 500 },
   INTERNAL_SERVER_ERROR: { message: 'Internal server error', statusCode: 500 },
+  ENVIRONMENT_VERIABLE_IS_NOT_DEFINED: {
+    message: 'Environment variable is not defined',
+    statusCode: 500,
+  },
 };
 
 export default class AppError extends Error {

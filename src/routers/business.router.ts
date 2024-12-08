@@ -1,12 +1,23 @@
 import express, { Router } from 'express';
 import businessController from '../controllers/business.controller';
-
+import { authenticateToken } from '../middlewares/authenticateToken';
+import { authorizeBusinessOwner } from '../middlewares/authorizeOwner';
 const app: Router = express.Router();
 
 app.get('/:id', businessController.getById);
 app.get('/', businessController.get);
-app.post('/', businessController.post);
-app.put('/:id', businessController.put);
-app.delete('/:id', businessController.delete);
+app.post('/', authenticateToken, businessController.post);
+app.put(
+  '/:id',
+  authenticateToken,
+  authorizeBusinessOwner,
+  businessController.put
+);
+app.delete(
+  '/:id',
+  authenticateToken,
+  authorizeBusinessOwner,
+  businessController.delete
+);
 
 export default app;

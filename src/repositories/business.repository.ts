@@ -22,7 +22,7 @@ class BusinessRepository {
     }
   }
 
-  async create(businessData: IBusiness): Promise<IBusiness> {
+  async create(businessData: Partial<IBusiness>): Promise<IBusiness> {
     try {
       const business = new Business(businessData);
       return await business.save();
