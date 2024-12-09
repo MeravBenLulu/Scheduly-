@@ -68,6 +68,16 @@ class BusinessRepository {
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
   }
+
+  async delete(parameters: any): Promise<void> {
+    try {
+      if (!Object.keys(parameters).length)
+        throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
+      await Business.deleteMany(parameters);
+    } catch (error) {
+      throw new AppError(ErrorConstants.DATABASE_ERROR);
+    }
+  }
 }
 
 export default new BusinessRepository();

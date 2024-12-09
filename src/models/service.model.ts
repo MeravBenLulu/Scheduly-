@@ -5,6 +5,7 @@ export interface IService extends Document {
   name: string;
   description: string;
   timeInMinutes: number;
+  price: number;
   businessId: string;
 }
 
@@ -12,6 +13,7 @@ const serviceSchema: Schema = new Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   timeInMinutes: { type: Number, required: true },
+  price: { type: Number, required: true },
   businessId: { type: Schema.Types.ObjectId, ref: 'Business', required: true },
 });
 

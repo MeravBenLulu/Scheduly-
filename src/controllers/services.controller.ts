@@ -89,6 +89,7 @@ class ServicesController {
    *               - name
    *               - description
    *               - timeInMinutes
+   *               - price
    *               - businessId
    *             properties:
    *               name:
@@ -100,6 +101,9 @@ class ServicesController {
    *               timeInMinutes:
    *                 type: number
    *                 description: haw match time the service is taking
+   *               price:
+   *                 type: number
+   *                 description: price of the service
    *               businessId:
    *                 type: string
    *                 description: The id of of the business that offer this service
@@ -161,6 +165,9 @@ class ServicesController {
    *               timeInMinutes:
    *                 type: string
    *                 description: The updated timeInMinutes of the service
+   *               price:
+   *                 type: number
+   *                 description: price of the service
    *     responses:
    *       200:
    *         description: service updated successfully

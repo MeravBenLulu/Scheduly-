@@ -4,7 +4,6 @@ import usersRepository from '../repositories/users.repository';
 import { IUser } from '../models/user.model';
 import AppError, { ErrorConstants } from '../classes/AppError';
 import { toUserResponse, IUserResponseDTO } from '../classes/dtos/users.dto';
-import logger from '../utils/logger';
 class UsersService {
   async get(): Promise<IUserResponseDTO[]> {
     const businesses: IUser[] | null = await usersRepository.find();

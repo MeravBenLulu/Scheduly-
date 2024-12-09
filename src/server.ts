@@ -8,6 +8,7 @@ import logMiddleware from './middlewares/logWriter';
 import servicesRouter from './routers/services.router';
 import businessRouter from './routers/business.router';
 import usersRouter from './routers/users.router';
+import meetingsRouter from './routers/meetings.router';
 
 connectToDB();
 const app: Application = express();
@@ -17,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logMiddleware);
 app.use('/business', businessRouter);
 app.use('/services', servicesRouter);
-// app.use('/api/meetings', require('./routes/meetingRoutes'));
+app.use('/meetings', meetingsRouter);
 app.use('/', usersRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(errorHandler);

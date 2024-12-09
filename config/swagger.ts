@@ -142,9 +142,59 @@ const options = {
               type: 'number',
               description: 'haw match time the service is taking',
             },
+            price: {
+              type: 'number',
+              description: 'price of the service',
+            },
             businessId: {
               type: 'string',
               description: 'The id of of the business that offer this service',
+            },
+          },
+        },
+        Meeting: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'Unique identifier for the meeting',
+            },
+            serviceId: {
+              type: 'string',
+              description: 'The identifier of the service',
+            },
+            businessId: {
+              type: 'string',
+              description: 'the identifier  of the business',
+            },
+            userId: {
+              type: 'string',
+              description: 'the identifier of the user',
+            },
+            startDate: {
+              type: 'date',
+              description: 'the start date of the meeting',
+            },
+            endDate: {
+              type: 'date',
+              description: 'the end date of the meeting',
+            },
+          },
+        },
+        MeetingDTO: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'Unique identifier for the meeting',
+            },
+            serviceId: {
+              type: 'string',
+              description: 'The identifier of the service',
+            },
+            date: {
+              type: 'date',
+              description: 'the start date of the meeting',
             },
           },
         },

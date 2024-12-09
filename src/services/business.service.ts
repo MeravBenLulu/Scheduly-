@@ -6,7 +6,8 @@ import {
   toBusinessResponse,
 } from '../classes/dtos/business.dto';
 import mongoose from 'mongoose';
-import businessRepository from '../repositories/business.repository';
+import meetingsService from './meetings.service';
+import servicesService from './services.service';
 
 class BusinessService {
   async get(): Promise<IBusinessResponseDTO[]> {
@@ -17,7 +18,7 @@ class BusinessService {
   async getById(id: string): Promise<IBusinessResponseDTO> {
     if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     if (!mongoose.Types.ObjectId.isValid(id))
-      throw new AppError(ErrorConstants.NOT_FOUND);
+      throw new AppError(ErrorConstants.VALIDATION_ERROR);
     const business: IBusiness | null = await BusinessRepository.findById(id);
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
     return toBusinessResponse(business);
@@ -25,8 +26,8 @@ class BusinessService {
   async getManagerIDById(id: string): Promise<string> {
     if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     if (!mongoose.Types.ObjectId.isValid(id))
-      throw new AppError(ErrorConstants.NOT_FOUND);
-    const business: IBusiness | null = await businessRepository.findById(id);
+      throw new AppError(ErrorConstants.VALIDATION_ERROR);
+    const business: IBusiness | null = await BusinessRepository.findById(id);
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
     return business.managerId;
   }
@@ -46,6 +47,7 @@ class BusinessService {
       managerId: managerId,
       telephone: data.telephone || null,
     };
+    //TODO:change userType from user to manager
     return await BusinessRepository.create(businesstoCreate);
   }
 
@@ -55,7 +57,7 @@ class BusinessService {
   ): Promise<IBusinessResponseDTO> {
     if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     if (!mongoose.Types.ObjectId.isValid(id))
-      throw new AppError(ErrorConstants.NOT_FOUND);
+      throw new AppError(ErrorConstants.VALIDATION_ERROR);
     const business = await BusinessRepository.findById(id);
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
     const res: IBusiness = await BusinessRepository.updateById(id, updates);
@@ -65,11 +67,14 @@ class BusinessService {
   async delete(id: string): Promise<void> {
     if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     if (!mongoose.Types.ObjectId.isValid(id))
-      throw new AppError(ErrorConstants.NOT_FOUND);
+      throw new AppError(ErrorConstants.VALIDATION_ERROR);
     const business = await BusinessRepository.findById(id);
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
     await BusinessRepository.deleteById(id);
-    //TODO:  add status parameter
+    await servicesService.deleteByBusinessId(id);
+    await meetingsService.deleteByBusinessId(id);
+    //TODO: add status parameter
+    //TODO: if this is the only one business of the user chnge user type from manager to user
   }
 }
 

@@ -30,9 +30,6 @@ class ServicesRepository {
       if (error instanceof mongoose.Error.ValidationError) {
         throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }
-      if (error.code === 11000) {
-        throw new AppError(ErrorConstants.DATA_ALREADY_EXISTS);
-      }
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
   }
@@ -51,9 +48,6 @@ class ServicesRepository {
       if (error instanceof mongoose.Error.ValidationError) {
         throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }
-      if (error.code === 11000) {
-        throw new AppError(ErrorConstants.DATA_ALREADY_EXISTS);
-      }
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
   }
@@ -65,6 +59,16 @@ class ServicesRepository {
       if (error instanceof mongoose.Error.ValidationError) {
         throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }
+      throw new AppError(ErrorConstants.DATABASE_ERROR);
+    }
+  }
+
+  async delete(parameters: any): Promise<void> {
+    try {
+      if (!Object.keys(parameters).length)
+        throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
+      await Service.deleteMany(parameters);
+    } catch (error) {
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
   }
