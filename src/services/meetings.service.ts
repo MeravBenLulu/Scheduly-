@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
-import MeetingsRepository from '../repositories/meetings.repository';
-import { IMeeting } from '../models/meeting.model';
-import AppError, { ErrorConstants } from '../classes/AppError';
-import servicesService from './services.service';
-import { IService } from '../models/service.model';
-import { IMeetingDTO, toMeetingResponse } from '../classes/dtos/meetings.dto';
+import mongoose from "mongoose";
+import MeetingsRepository from "../repositories/meetings.repository";
+import { IMeeting } from "../models/meeting.model";
+import AppError, { ErrorConstants } from "../classes/AppError";
+import servicesService from "./services.service";
+import { IService } from "../models/service.model";
+import { IMeetingDTO, toMeetingResponse } from "../classes/dtos/meetings.dto";
 
 class MeetingsService {
   async get(): Promise<IMeeting[]> {
@@ -32,7 +32,7 @@ class MeetingsService {
     if (!serviceId || !date)
       throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     const startDate = new Date(date);
-    if (isNaN(startDate.getTime())) throw new Error('Invalid date provided');
+    if (isNaN(startDate.getTime())) throw new Error("Invalid date provided");
     const service: IService = await servicesService.getById(serviceId);
     const end: Date = new Date(startDate.getTime());
     end.setMinutes(end.getMinutes() + service.timeInMinutes);
@@ -82,10 +82,11 @@ class MeetingsService {
     )
       throw new AppError(ErrorConstants.DATA_ALREADY_EXISTS);
 
-    const res: IMeeting = await MeetingsRepository.updateById(id, {
+    const res: IMeeting | null = await MeetingsRepository.updateById(id, {
       startDate: date,
       endDate: end,
     });
+    if (!res) throw new AppError(ErrorConstants.NOT_FOUND);
     return toMeetingResponse(res);
   }
 

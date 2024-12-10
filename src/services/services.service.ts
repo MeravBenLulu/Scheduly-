@@ -1,8 +1,8 @@
-import ServicesRepository from '../repositories/services.repository';
-import { IService } from '../models/service.model';
-import AppError, { ErrorConstants } from '../classes/AppError';
-import mongoose from 'mongoose';
-import meetingsService from './meetings.service';
+import ServicesRepository from "../repositories/services.repository";
+import { IService } from "../models/service.model";
+import AppError, { ErrorConstants } from "../classes/AppError";
+import mongoose from "mongoose";
+import meetingsService from "./meetings.service";
 
 class ServicesService {
   async get(): Promise<IService[]> {
@@ -38,9 +38,9 @@ class ServicesService {
     )
       throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     if (
-      String(timeInMinutes) === '' ||
+      String(timeInMinutes) === "" ||
       isNaN(Number(timeInMinutes)) ||
-      String(price) === '' ||
+      String(price) === "" ||
       isNaN(Number(price))
     )
       throw new AppError(ErrorConstants.VALIDATION_ERROR);
@@ -52,18 +52,27 @@ class ServicesService {
     if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new AppError(ErrorConstants.VALIDATION_ERROR);
-    if ('businessId' in updates) delete updates.businessId;
+    if ("businessId" in updates) delete updates.businessId;
     if (
-      ('timeInMinutes' in updates &&
-        (String(updates.timeInMinutes) === '' ||
-          isNaN(updates.timeInMinutes))) ||
-      ('price' in updates &&
-        (String(updates.price) === '' || isNaN(updates.price)))
+      ("timeInMinutes" in updates &&
+        (updates.timeInMinutes === null ||
+          updates.timeInMinutes === undefined ||
+          String(updates.timeInMinutes).trim() === "" ||
+          isNaN(Number(updates.timeInMinutes)))) ||
+      ("price" in updates &&
+        (updates.price === null ||
+          updates.price === undefined ||
+          String(updates.price).trim() === "" ||
+          isNaN(Number(updates.price))))
     )
       throw new AppError(ErrorConstants.VALIDATION_ERROR);
     // const service = await ServicesRepository.findById(id);
     // if (!service) throw new AppError(ErrorConstants.NOT_FOUND);
-    const res: IService = await ServicesRepository.updateById(id, updates);
+    const res: IService | null = await ServicesRepository.updateById(
+      id,
+      updates,
+    );
+    if (!res) throw new AppError(ErrorConstants.NOT_FOUND);
     return res;
   }
 

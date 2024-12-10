@@ -1,6 +1,6 @@
-import Business, { IBusiness } from '../models/business.model';
-import mongoose from 'mongoose';
-import AppError, { ErrorConstants } from '../classes/AppError';
+import Business, { IBusiness } from "../models/business.model";
+import mongoose from "mongoose";
+import AppError, { ErrorConstants } from "../classes/AppError";
 
 class BusinessRepository {
   async find(): Promise<IBusiness[]> {
@@ -26,7 +26,7 @@ class BusinessRepository {
     try {
       const business = new Business(businessData);
       return await business.save();
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof mongoose.Error.ValidationError) {
         throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }
@@ -39,15 +39,15 @@ class BusinessRepository {
 
   async updateById(
     id: string,
-    updates: Partial<IBusiness>
+    updates: Partial<IBusiness>,
   ): Promise<IBusiness | null> {
     try {
       return await Business.findByIdAndUpdate(
         id,
         { $set: updates },
-        { new: true }
+        { new: true },
       ).lean<IBusiness>();
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof mongoose.Error.ValidationError) {
         throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }

@@ -1,13 +1,13 @@
-import BusinessRepository from '../repositories/business.repository';
-import { IBusiness } from '../models/business.model';
-import AppError, { ErrorConstants } from '../classes/AppError';
+import BusinessRepository from "../repositories/business.repository";
+import { IBusiness } from "../models/business.model";
+import AppError, { ErrorConstants } from "../classes/AppError";
 import {
   IBusinessResponseDTO,
   toBusinessResponse,
-} from '../classes/dtos/business.dto';
-import mongoose from 'mongoose';
-import meetingsService from './meetings.service';
-import servicesService from './services.service';
+} from "../classes/dtos/business.dto";
+import mongoose from "mongoose";
+import meetingsService from "./meetings.service";
+import servicesService from "./services.service";
 
 class BusinessService {
   async get(): Promise<IBusinessResponseDTO[]> {
@@ -34,7 +34,7 @@ class BusinessService {
 
   async create(
     data: IBusinessResponseDTO,
-    managerId: string
+    managerId: string,
   ): Promise<IBusiness> {
     const { name, description, address, email } = data;
     if (!name || !description || !email || !address)
@@ -45,7 +45,7 @@ class BusinessService {
       description: data.description,
       address: data.address,
       managerId: managerId,
-      telephone: data.telephone || null,
+      telephone: data.telephone ?? null,
     };
     //TODO:change userType from user to manager
     return await BusinessRepository.create(businesstoCreate);
@@ -53,14 +53,18 @@ class BusinessService {
 
   async update(
     id: string,
-    updates: Partial<IBusinessResponseDTO>
+    updates: Partial<IBusinessResponseDTO>,
   ): Promise<IBusinessResponseDTO> {
     if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new AppError(ErrorConstants.VALIDATION_ERROR);
     const business = await BusinessRepository.findById(id);
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
-    const res: IBusiness = await BusinessRepository.updateById(id, updates);
+    const res: IBusiness | null = await BusinessRepository.updateById(
+      id,
+      updates,
+    );
+    if (!res) throw new AppError(ErrorConstants.NOT_FOUND);
     return toBusinessResponse(res);
   }
 

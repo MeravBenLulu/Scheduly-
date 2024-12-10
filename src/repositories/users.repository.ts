@@ -1,6 +1,6 @@
-import User, { IUser } from '../models/user.model';
-import mongoose from 'mongoose';
-import AppError, { ErrorConstants } from '../classes/AppError';
+import User, { IUser } from "../models/user.model";
+import mongoose from "mongoose";
+import AppError, { ErrorConstants } from "../classes/AppError";
 
 class UserRepository {
   async find(): Promise<IUser[]> {
@@ -25,7 +25,7 @@ class UserRepository {
     try {
       const business = new User(userData);
       return await business.save();
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof mongoose.Error.ValidationError) {
         throw new AppError(ErrorConstants.VALIDATION_ERROR);
       }
