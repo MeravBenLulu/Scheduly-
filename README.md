@@ -112,8 +112,8 @@ tsConfig
     npm install express mongoose dotenv jsonwebtoken log4js bcryptjs typescript body-parser
     npm install --save-dev prettier eslint eslint-config-prettier eslint-plugin-prettier
     npm install swagger-ui-express @nestjs/swagger @types/swagger-ui-express
-
-
+    npm install cors
+    npm install @types/cors --save-dev
 
 
 3. Create a .env file and add the following variables:
@@ -123,6 +123,7 @@ tsConfig
    JWT_SECRET_KEY=your_jwt_secret
 4. Run the server:
    ```bash\
+   sudo systemctl start mongod
    npm start
 
 
