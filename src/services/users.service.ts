@@ -21,18 +21,19 @@ class UsersService {
     if (!process.env.JWT_SECRET_KEY)
       throw new AppError(ErrorConstants.ENVIRONMENT_VERIABLE_IS_NOT_DEFINED);
     const token = await jwt.sign(
-      { userId: user._id },
+      { userId: user._id, userRole: user.role },
       process.env.JWT_SECRET_KEY,
       { expiresIn: "5h" },
     );
     return token;
   }
   async create(userData: IUser): Promise<IUserResponseDTO> {
-    const { password, email, name } = userData;
+    const { password, email, name, role } = userData;
     if (!password || !email || !name)
       throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
     const hashedPassword = await bcryptjs.hash(userData.password, 10);
     userData.password = hashedPassword;
+    if (!role) userData.role = "user";
     const newUser = await usersRepository.create(userData);
     return toUserResponse(newUser);
   }

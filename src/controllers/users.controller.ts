@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import UsersService from '../services/users.service';
-import { IUserResponseDTO } from '../classes/dtos/users.dto';
-import { IUser } from '../models/user.model';
+import { Request, Response, NextFunction } from "express";
+import UsersService from "../services/users.service";
+import { IUserResponseDTO } from "../classes/dtos/users.dto";
+import { IUser } from "../models/user.model";
 class UsersController {
   /**
    * @swagger
@@ -70,7 +70,7 @@ class UsersController {
     try {
       const token: string = await UsersService.signIn(
         req.body.name,
-        req.body.password
+        req.body.password,
       );
       res.status(200).json({ success: true, data: { token } });
     } catch (error) {
@@ -93,6 +93,7 @@ class UsersController {
    *               - name
    *               - password
    *               - email
+   *               - role
    *             properties:
    *               name:
    *                 type: string
@@ -103,6 +104,9 @@ class UsersController {
    *               email:
    *                 type: string
    *                 description: The email of the user
+   *               role:
+   *                 type: string
+   *                 description: The role of the user
    *     responses:
    *       201:
    *         description: user created successfully

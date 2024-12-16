@@ -1,23 +1,24 @@
-import express, { Router } from 'express';
-import businessController from '../controllers/business.controller';
-import { authenticateToken } from '../middlewares/authenticateToken';
-import { authorizeBusinessOwner } from '../middlewares/authorizeOwner';
+import express, { Router } from "express";
+import businessController from "../controllers/business.controller";
+import { authenticateToken } from "../middlewares/authenticateToken";
+import { authorizeBusinessOwner } from "../middlewares/authorizeOwner";
+import { authorizeManager } from "../middlewares/authorizeManager";
 const app: Router = express.Router();
 
-app.get('/:id', businessController.getById);
-app.get('/', businessController.get);
-app.post('/', authenticateToken, businessController.post);
+app.get("/:id", businessController.getById);
+app.get("/", businessController.get);
+app.post("/", authenticateToken, authorizeManager, businessController.post);
 app.put(
-  '/:id',
+  "/:id",
   authenticateToken,
   authorizeBusinessOwner,
-  businessController.put
+  businessController.put,
 );
 app.delete(
-  '/:id',
+  "/:id",
   authenticateToken,
   authorizeBusinessOwner,
-  businessController.delete
+  businessController.delete,
 );
 
 export default app;
