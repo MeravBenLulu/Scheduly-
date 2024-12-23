@@ -27,6 +27,17 @@ class ServicesService {
     return service.businessId;
   }
 
+  async getByBusinessId(id: string): Promise<IService[]> {
+    if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
+    if (!mongoose.Types.ObjectId.isValid(id))
+      throw new AppError(ErrorConstants.VALIDATION_ERROR);
+    const services: IService[] | null = await ServicesRepository.find({
+      businessId: id,
+    });
+    if (!services) throw new AppError(ErrorConstants.NOT_FOUND);
+    return services;
+  }
+
   async create(data: IService): Promise<IService> {
     const { name, description, timeInMinutes, businessId, price } = data;
     if (

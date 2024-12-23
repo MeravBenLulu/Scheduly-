@@ -8,6 +8,7 @@ import {
 import mongoose from "mongoose";
 import meetingsService from "./meetings.service";
 import servicesService from "./services.service";
+import { IService } from "models/service.model";
 
 class BusinessService {
   async get(): Promise<IBusinessResponseDTO[]> {
@@ -30,6 +31,15 @@ class BusinessService {
     const business: IBusiness | null = await BusinessRepository.findById(id);
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
     return business.managerId;
+  }
+  async getServicesById(id: string): Promise<IService[]> {
+    if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
+    if (!mongoose.Types.ObjectId.isValid(id))
+      throw new AppError(ErrorConstants.VALIDATION_ERROR);
+    const services: IService[] | null =
+      await servicesService.getByBusinessId(id);
+    if (!services) throw new AppError(ErrorConstants.NOT_FOUND);
+    return services;
   }
 
   async create(

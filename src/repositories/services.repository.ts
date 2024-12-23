@@ -1,11 +1,11 @@
-import Service, { IService } from '../models/service.model';
-import mongoose from 'mongoose';
-import AppError, { ErrorConstants } from '../classes/AppError';
+import Service, { IService } from "../models/service.model";
+import mongoose from "mongoose";
+import AppError, { ErrorConstants } from "../classes/AppError";
 
 class ServicesRepository {
-  async find(): Promise<IService[]> {
+  async find(parameters: any = {}): Promise<IService[]> {
     try {
-      return await Service.find().lean<IService[]>();
+      return await Service.find(parameters).lean<IService[]>();
     } catch (error) {
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
@@ -36,13 +36,13 @@ class ServicesRepository {
 
   async updateById(
     id: string,
-    updates: Partial<IService>
+    updates: Partial<IService>,
   ): Promise<IService | null> {
     try {
       return await Service.findByIdAndUpdate(
         id,
         { $set: updates },
-        { new: true }
+        { new: true },
       ).lean<IService>();
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {

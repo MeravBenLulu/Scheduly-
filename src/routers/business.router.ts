@@ -7,6 +7,7 @@ const app: Router = express.Router();
 
 app.get("/:id", businessController.getById);
 app.get("/", businessController.get);
+app.get("/:id/services", businessController.getServicesById);
 app.post("/", authenticateToken, authorizeManager, businessController.post);
 app.put(
   "/:id",
