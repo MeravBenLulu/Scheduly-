@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import BusinessService from "../services/business.service";
 import { IBusiness } from "../models/business.model";
 import { IBusinessResponseDTO } from "../classes/dtos/business.dto";
-import { IService } from "models/service.model";
-
 class BusinessController {
   /**
    * @swagger
@@ -70,49 +68,6 @@ class BusinessController {
         req.params.id,
       );
       res.status(200).json(business);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * @swagger
-   * /business/{id}/services:
-   *   get:
-   *     summary: Get services by business id
-   *     description: Retrieve a specific services by its business id.
-   *     tags: [Business]
-   *     parameters:
-   *       - in: path
-   *         name: id
-   *         required: true
-   *         description: The id of the business.
-   *         schema:
-   *           type: string
-   *     responses:
-   *       200:
-   *         description: services found
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Service'
-   *       400:
-   *         description: Some required fields are missing
-   *       404:
-   *         description: not found
-   *       500:
-   *         description: Internal server error
-   */
-  async getServicesById(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const services: IService[] = await BusinessService.getServicesById(
-        req.params.id,
-      );
-      res.status(200).json(services);
     } catch (error) {
       next(error);
     }

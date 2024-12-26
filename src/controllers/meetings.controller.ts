@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import MeetingsService from '../services/meetings.service';
-import { IMeeting } from '../models/meeting.model';
-import { IMeetingDTO } from '../classes/dtos/meetings.dto';
+import { Request, Response, NextFunction } from "express";
+import MeetingsService from "../services/meetings.service";
+import { IMeeting } from "../models/meeting.model";
+import { IMeetingDTO } from "../classes/dtos/meetings.dto";
 
 class MeetingsController {
   /**
@@ -62,11 +62,54 @@ class MeetingsController {
   async getById(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> {
     try {
       const meeting: IMeeting = await MeetingsService.getById(req.params.id);
       res.status(200).json(meeting);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /meetings/business/{businessId}:
+   *   get:
+   *     summary: Get meeting by business id
+   *     description: Retrieve a specific meetings by its id.
+   *     tags: [Meeting]
+   *     parameters:
+   *       - in: path
+   *         name: businessId
+   *         required: true
+   *         description: The id of the business.
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: meetings found
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Meeting'
+   *       400:
+   *         description: Some required fields are missing
+   *       404:
+   *         description: not found
+   *       500:
+   *         description: Internal server error
+   */
+  async getByBusinessId(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const meetings: IMeeting[] = await MeetingsService.getByBusinessId(
+        req.params.businessId,
+      );
+      res.status(200).json(meetings);
     } catch (error) {
       next(error);
     }
@@ -119,7 +162,7 @@ class MeetingsController {
     try {
       const newmeeting: IMeetingDTO = await MeetingsService.create(
         req.body,
-        res.locals.user.userId
+        res.locals.user.userId,
       );
       res.status(201).json({ success: true, data: newmeeting });
     } catch (error) {
@@ -178,7 +221,7 @@ class MeetingsController {
     try {
       const updatedmeeting: IMeetingDTO = await MeetingsService.update(
         req.params.id,
-        req.body.date
+        req.body.date,
       );
       res.status(200).json({ success: true, data: updatedmeeting });
     } catch (error) {

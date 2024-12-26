@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import ServicesService from '../services/services.service';
-import { IService } from '../models/service.model';
+import { Request, Response, NextFunction } from "express";
+import ServicesService from "../services/services.service";
+import { IService } from "../models/service.model";
 
 class ServicesController {
   /**
@@ -61,11 +61,54 @@ class ServicesController {
   async getById(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> {
     try {
       const Services: IService = await ServicesService.getById(req.params.id);
       res.status(200).json(Services);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /services/business/{businessId}:
+   *   get:
+   *     summary: Get services by business id
+   *     description: Retrieve a specific services by its business id.
+   *     tags: [Services]
+   *     parameters:
+   *       - in: path
+   *         name: businessId
+   *         required: true
+   *         description: The id of the business.
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: services found
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Service'
+   *       400:
+   *         description: Some required fields are missing
+   *       404:
+   *         description: not found
+   *       500:
+   *         description: Internal server error
+   */
+  async getByBusinessId(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const services: IService[] = await ServicesService.getByBusinessId(
+        req.params.businessId,
+      );
+      res.status(200).json(services);
     } catch (error) {
       next(error);
     }
@@ -194,7 +237,7 @@ class ServicesController {
     try {
       const updatedServices: IService = await ServicesService.update(
         req.params.id,
-        req.body
+        req.body,
       );
       res.status(200).json({ success: true, data: updatedServices });
     } catch (error) {

@@ -1,11 +1,11 @@
-import Meeting, { IMeeting } from '../models/meeting.model';
-import mongoose from 'mongoose';
-import AppError, { ErrorConstants } from '../classes/AppError';
+import Meeting, { IMeeting } from "../models/meeting.model";
+import mongoose from "mongoose";
+import AppError, { ErrorConstants } from "../classes/AppError";
 
 class MeetingsRepository {
-  async find(): Promise<IMeeting[]> {
+  async find(parameters: any = {}): Promise<IMeeting[]> {
     try {
-      return await Meeting.find().lean<IMeeting[]>();
+      return await Meeting.find(parameters).lean<IMeeting[]>();
     } catch (error) {
       throw new AppError(ErrorConstants.DATABASE_ERROR);
     }
@@ -23,7 +23,7 @@ class MeetingsRepository {
   }
   async findOverlappingMeetings(
     businessId: string,
-    dates: { startDate: Date; endDate: Date }
+    dates: { startDate: Date; endDate: Date },
   ): Promise<IMeeting[]> {
     const res: IMeeting[] = await Meeting.find({
       businessId: businessId,
@@ -53,13 +53,13 @@ class MeetingsRepository {
 
   async updateById(
     id: string,
-    updates: Partial<IMeeting>
+    updates: Partial<IMeeting>,
   ): Promise<IMeeting | null> {
     try {
       return await Meeting.findByIdAndUpdate(
         id,
         { $set: updates },
-        { new: true }
+        { new: true },
       ).lean<IMeeting>();
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {

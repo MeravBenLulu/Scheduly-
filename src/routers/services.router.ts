@@ -1,31 +1,32 @@
-import express, { Router } from 'express';
-import servicesController from '../controllers/services.controller';
-import { authenticateToken } from '../middlewares/authenticateToken';
+import express, { Router } from "express";
+import servicesController from "../controllers/services.controller";
+import { authenticateToken } from "../middlewares/authenticateToken";
 import {
   authorizeBusinessOwner,
   authorizeServicesOwner,
-} from '../middlewares/authorizeOwner';
+} from "../middlewares/authorizeOwner";
 const app: Router = express.Router();
 
-app.get('/:id', servicesController.getById);
-app.get('/', servicesController.get);
+app.get("/:id", servicesController.getById);
+app.get("/", servicesController.get);
+app.get("/business/:businessId", servicesController.getByBusinessId);
 app.post(
-  '/',
+  "/",
   authenticateToken,
   authorizeServicesOwner,
-  servicesController.post
+  servicesController.post,
 );
 app.put(
-  '/:id',
+  "/:id",
   authenticateToken,
   authorizeServicesOwner,
-  servicesController.put
+  servicesController.put,
 );
 app.delete(
-  '/:id',
+  "/:id",
   authenticateToken,
   authorizeServicesOwner,
-  servicesController.delete
+  servicesController.delete,
 );
 
 export default app;

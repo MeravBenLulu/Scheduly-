@@ -21,11 +21,13 @@ class MeetingsService {
     return meeting;
   }
 
-  //   async getByBusinessId(id: string): Promise<IMeeting[]> {
-  //     const meetings: IMeeting[] | null = await MeetingsRepository.findBy({businessId:id});
-  //     if (!meetings) throw new AppError(ErrorConstants.DATABASE_ERROR);
-  //     return meetings;
-  //   }
+  async getByBusinessId(id: string): Promise<IMeeting[]> {
+    const meetings: IMeeting[] | null = await MeetingsRepository.find({
+      businessId: id,
+    });
+    if (!meetings) throw new AppError(ErrorConstants.DATABASE_ERROR);
+    return meetings;
+  }
 
   async create(data: IMeetingDTO, userId: string): Promise<IMeetingDTO> {
     const { serviceId, date } = data;

@@ -32,15 +32,6 @@ class BusinessService {
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
     return business.managerId;
   }
-  async getServicesById(id: string): Promise<IService[]> {
-    if (!id) throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
-    if (!mongoose.Types.ObjectId.isValid(id))
-      throw new AppError(ErrorConstants.VALIDATION_ERROR);
-    const services: IService[] | null =
-      await servicesService.getByBusinessId(id);
-    if (!services) throw new AppError(ErrorConstants.NOT_FOUND);
-    return services;
-  }
 
   async create(
     data: IBusinessResponseDTO,
