@@ -5,6 +5,9 @@ import AppError, { ErrorConstants } from "../classes/AppError";
 import servicesService from "./services.service";
 import { IService } from "../models/service.model";
 import { IMeetingDTO, toMeetingResponse } from "../classes/dtos/meetings.dto";
+import businessService from "./business.service";
+import { validateMeetingTime } from "../utils/meetingInOpenningHoursValidation";
+import { IBusinessResponseDTO } from "../classes/dtos/business.dto";
 
 class MeetingsService {
   async get(): Promise<IMeeting[]> {
@@ -36,13 +39,22 @@ class MeetingsService {
     const startDate = new Date(date);
     if (isNaN(startDate.getTime())) throw new Error("Invalid date provided");
     const service: IService = await servicesService.getById(serviceId);
-    const end: Date = new Date(startDate.getTime());
-    end.setMinutes(end.getMinutes() + service.timeInMinutes);
+    const business: IBusinessResponseDTO = await businessService.getById(
+      service.businessId,
+    );
+    await validateMeetingTime(
+      business.openingHours,
+      startDate,
+      service.timeInMinutes,
+    );
+
+    const endDate: Date = new Date(startDate.getTime());
+    endDate.setMinutes(endDate.getMinutes() + service.timeInMinutes);
 
     const meetings: IMeeting[] =
       await MeetingsRepository.findOverlappingMeetings(service.businessId, {
         startDate: startDate,
-        endDate: end,
+        endDate: endDate,
       });
     if (meetings.length > 0)
       throw new AppError(ErrorConstants.DATA_ALREADY_EXISTS);
@@ -50,7 +62,7 @@ class MeetingsService {
       serviceId: serviceId,
       businessId: service.businessId,
       startDate: startDate,
-      endDate: end,
+      endDate: endDate,
       userId: userId,
     };
     const res = await MeetingsRepository.create(meetingToCreate);
@@ -66,11 +78,14 @@ class MeetingsService {
 
     if (!(date instanceof Date) || isNaN(date.getTime()))
       throw new AppError(ErrorConstants.VALIDATION_ERROR);
-
+    const business: IBusinessResponseDTO = await businessService.getById(
+      meeting.businessId,
+    );
     const differenceInMilliseconds =
       meeting.endDate.getTime() - meeting.startDate.getTime();
     const differenceInMinutes = differenceInMilliseconds / (1000 * 60);
     const end = new Date(date.getDate());
+    await validateMeetingTime(business.openingHours, end, differenceInMinutes);
     end.setMinutes(date.getMinutes() + differenceInMinutes);
 
     const meetings: IMeeting[] =

@@ -93,6 +93,7 @@ class BusinessController {
    *               - description
    *               - email
    *               - address
+   *               - openningHours
    *             properties:
    *               name:
    *                 type: string
@@ -109,6 +110,27 @@ class BusinessController {
    *               address:
    *                 type: string
    *                 description: The address of the business
+   *               openningHours:
+   *                 type: array
+   *                 description: The opening hours of the business
+   *                 items:
+   *                   type: object
+   *                   required:
+   *                     - day
+   *                     - openTime
+   *                     - closeTime
+   *                   properties:
+   *                     day:
+   *                       type: string
+   *                       description: The day of the week
+   *                     openTime:
+   *                       type: string
+   *                       format: time
+   *                       description: The opening time (e.g., HH:mm)
+   *                     closeTime:
+   *                       type: string
+   *                       format: time
+   *                       description: The closing time (e.g., HH:mm)
    *     responses:
    *       201:
    *         description: Business created successfully
@@ -179,6 +201,27 @@ class BusinessController {
    *               managerId:
    *                type: string
    *                description: The business manager unique identifier
+   *               openningHours:
+   *                 type: array
+   *                 description: The opening hours of the business
+   *                 items:
+   *                   type: object
+   *                   required:
+   *                     - day
+   *                     - openTime
+   *                     - closeTime
+   *                   properties:
+   *                     day:
+   *                       type: string
+   *                       description: The day of the week
+   *                     openTime:
+   *                       type: string
+   *                       format: time
+   *                       description: The opening time (e.g., HH:mm)
+   *                     closeTime:
+   *                       type: string
+   *                       format: time
+   *                       description: The closing time (e.g., HH:mm)
    *     responses:
    *       200:
    *         description: Business updated successfully

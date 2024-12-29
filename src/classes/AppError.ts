@@ -1,18 +1,18 @@
 export const ErrorConstants = {
-  INVALID_CREDENTIALS: { message: 'Invalid credentials', statusCode: 401 },
+  INVALID_CREDENTIALS: { message: "Invalid credentials", statusCode: 401 },
   MISSING_REQUIRED_FIELDS: {
-    message: 'Some required fields are missing',
+    message: "Some required fields are missing",
     statusCode: 400,
   },
-  VALIDATION_ERROR: { message: 'validation failed', statusCode: 422 },
-  NOT_FOUND: { message: 'not found', statusCode: 404 },
-  DATA_ALREADY_EXISTS: { message: 'Data already exists', statusCode: 409 },
-  UNAUTHORIZED: { message: 'Unauthorized access', statusCode: 401 },
-  FORBIDDEN: { message: 'Forbidden action', statusCode: 403 },
-  DATABASE_ERROR: { message: 'Database error occurred', statusCode: 500 },
-  INTERNAL_SERVER_ERROR: { message: 'Internal server error', statusCode: 500 },
+  VALIDATION_ERROR: { message: "validation failed", statusCode: 422 },
+  NOT_FOUND: { message: "not found", statusCode: 404 },
+  DATA_ALREADY_EXISTS: { message: "Data already exists", statusCode: 409 },
+  UNAUTHORIZED: { message: "Unauthorized access", statusCode: 401 },
+  FORBIDDEN: { message: "Forbidden action", statusCode: 403 },
+  DATABASE_ERROR: { message: "Database error occurred", statusCode: 500 },
+  INTERNAL_SERVER_ERROR: { message: "Internal server error", statusCode: 500 },
   ENVIRONMENT_VERIABLE_IS_NOT_DEFINED: {
-    message: 'Environment variable is not defined',
+    message: "Environment variable is not defined",
     statusCode: 500,
   },
 };

@@ -8,7 +8,7 @@ import {
 import mongoose from "mongoose";
 import meetingsService from "./meetings.service";
 import servicesService from "./services.service";
-import { IService } from "models/service.model";
+import { validateOpeningHours } from "../utils/openingHourseValidation";
 
 class BusinessService {
   async get(): Promise<IBusinessResponseDTO[]> {
@@ -37,9 +37,10 @@ class BusinessService {
     data: IBusinessResponseDTO,
     managerId: string,
   ): Promise<IBusiness> {
-    const { name, description, address, email } = data;
-    if (!name || !description || !email || !address)
+    const { name, description, address, email, openingHours } = data;
+    if (!name || !description || !email || !address || !openingHours)
       throw new AppError(ErrorConstants.MISSING_REQUIRED_FIELDS);
+    await validateOpeningHours(openingHours);
     const businesstoCreate: Partial<IBusiness> = {
       name: data.name,
       email: data.email,
@@ -47,8 +48,8 @@ class BusinessService {
       address: data.address,
       managerId: managerId,
       telephone: data.telephone ?? null,
+      openingHours: data.openingHours,
     };
-    //TODO:change userType from user to manager
     return await BusinessRepository.create(businesstoCreate);
   }
 
@@ -61,6 +62,7 @@ class BusinessService {
       throw new AppError(ErrorConstants.VALIDATION_ERROR);
     const business = await BusinessRepository.findById(id);
     if (!business) throw new AppError(ErrorConstants.NOT_FOUND);
+    if ("openingHoures" in updates) validateOpeningHours(updates.openingHours!);
     const res: IBusiness | null = await BusinessRepository.updateById(
       id,
       updates,

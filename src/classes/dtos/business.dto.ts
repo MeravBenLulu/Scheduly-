@@ -1,4 +1,4 @@
-import { IBusiness } from '../../models/business.model';
+import { IBusiness, IOpeningHours } from "../../models/business.model";
 
 export interface IBusinessResponseDTO {
   id: string;
@@ -7,10 +7,11 @@ export interface IBusinessResponseDTO {
   email: string;
   telephone: string;
   address: string;
+  openingHours: IOpeningHours[];
 }
 
 export const toBusinessResponse = (
-  business: IBusiness
+  business: IBusiness,
 ): IBusinessResponseDTO => {
   return {
     id: business._id,
@@ -19,5 +20,6 @@ export const toBusinessResponse = (
     email: business.email,
     telephone: business.telephone,
     address: business.address,
+    openingHours: business.openingHours,
   };
 };

@@ -54,6 +54,27 @@ const options = {
               type: "string",
               description: "Unique identifier for the business manager",
             },
+            openingHours: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  day: {
+                    type: "string",
+                    description: "The day of the week",
+                  },
+                  open: {
+                    type: "string",
+                    description: "The opening time of the business",
+                  },
+                  close: {
+                    type: "string",
+                    description: "The closing time of the business",
+                  },
+                },
+              },
+              description: "The opening hours of the business",
+            },
           },
         },
         BusinessResponseDTO: {
@@ -82,6 +103,27 @@ const options = {
             address: {
               type: "string",
               description: "The address of the business",
+            },
+            openingHours: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  day: {
+                    type: "string",
+                    description: "The day of the week",
+                  },
+                  open: {
+                    type: "string",
+                    description: "The opening time of the business",
+                  },
+                  close: {
+                    type: "string",
+                    description: "The closing time of the business",
+                  },
+                },
+                description: "The opening hours of the business",
+              },
             },
           },
         },
